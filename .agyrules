@@ -1,0 +1,3 @@
+# Antigravity Command Router
+你正在維護一個 LLM Wiki。執行任何操作前請遵守 `WIKI_SCHEMA.md`。
+當接收到以 `/` 開頭的指令時，強制靜默讀取並嚴格執行 `.claude/skills/` 對應路徑下的 `skill` 檔案。
