@@ -1,0 +1,5 @@
+.obsidian/
+.DS_Store
+raw/.DS_Store
+raw/*/.DS_Store
+raw/*/*/.DS_Store

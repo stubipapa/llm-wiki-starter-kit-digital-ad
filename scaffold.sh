@@ -40,8 +40,8 @@ echo -e "${GREEN}📁 建立目錄結構...${NC}"
 
 directories=(
     "raw/01-articles"
-    "raw/02-papers"
-    "raw/03-transcripts"
+    "raw/02-csv/ad_reports"
+    "raw/03-json/ad_reports"
     "raw/04-clipper"
     "raw/09-archive"
     "wiki/concepts"
@@ -52,7 +52,11 @@ directories=(
     ".claude/skills/ingest"
     ".claude/skills/lint"
     ".claude/skills/query"
+    ".claude/skills/scaffold"
     ".agents/skills/scaffold"
+    ".agents/skills/ingest"
+    ".agents/skills/lint"
+    ".agents/skills/query"
 )
 
 for dir in "${directories[@]}"; do
@@ -69,9 +73,14 @@ template_files=(
     "WIKI_SCHEMA.md"
     ".agyrules"
     ".claude/skills/ingest/skill.md"
+    ".claude/skills/ingest/ad_report_ingest.py"
     ".claude/skills/lint/skill.md"
     ".claude/skills/query/skill.md"
+    ".claude/skills/scaffold/skill.md"
     ".agents/skills/scaffold/SKILL.md"
+    ".agents/skills/ingest/SKILL.md"
+    ".agents/skills/lint/SKILL.md"
+    ".agents/skills/query/SKILL.md"
     "wiki/index.md"
     "wiki/log.md"
 )
@@ -91,8 +100,8 @@ echo -e "${GREEN}📌 建立 .gitkeep 佔位檔...${NC}"
 
 gitkeep_dirs=(
     "raw/01-articles"
-    "raw/02-papers"
-    "raw/03-transcripts"
+    "raw/02-csv/ad_reports"
+    "raw/03-json/ad_reports"
     "raw/04-clipper"
     "raw/09-archive"
     "wiki/concepts"
