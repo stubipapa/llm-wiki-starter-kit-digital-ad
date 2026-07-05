@@ -22,7 +22,65 @@ def get_value(row, col_map, key, default=None):
         return row[col_map[key]]
     return default
 
-def process_csv(input_csv, output_json):
+def format_val(val, is_percent=False, is_float=False):
+    if val is None:
+        return "-"
+    if is_percent:
+        return f"{val*100:.2f}%"
+    if is_float:
+        return f"{val:,.2f}"
+    return f"{val:,}"
+
+def generate_markdown(campaign, output_md):
+    lines = []
+    lines.append(f"# 廣告報表原始數據歸檔: {campaign.get('campaign_name', '未命名活動')}")
+    lines.append("")
+    lines.append("## 活動概覽")
+    lines.append("| 欄位 | 數值 |")
+    lines.append("|---|---|")
+    lines.append(f"| 活動名稱 | {campaign.get('campaign_name', '-')} |")
+    lines.append(f"| 投放平台 | {campaign.get('platform', '-')} |")
+    lines.append(f"| 行銷目標 | {campaign.get('marketing_objective', '-')} |")
+    lines.append(f"| 廣告走期 | {campaign.get('period', '-')} |")
+    lines.append(f"| 總預算 | {format_val(campaign.get('cost'), is_float=True)} |")
+    lines.append(f"| KPI 目標值 | {format_val(campaign.get('kpi_target_value'))} |")
+    lines.append(f"| KPI 實際值 | {format_val(campaign.get('kpi_actual_value'))} |")
+    lines.append(f"| KPI 達成率 | {format_val(campaign.get('kpi_achievement_rate'), is_percent=True)} |")
+    lines.append("")
+    
+    sections = [
+        ("日期維度成效 (Date)", "date"),
+        ("受眾維度成效 (Target Audience)", "target_audience"),
+        ("年齡維度成效 (Target Age)", "target_age")
+    ]
+    
+    for title, key in sections:
+        data = campaign.get(key, {})
+        if not data:
+            continue
+        lines.append(f"## {title}")
+        lines.append("| 項目 | 花費 | 曝光 | 點擊 | 按鈕點擊 | CTR | CPC | CPM | 觀看 | VTR | CPV |")
+        lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
+        for item_name, metrics in data.items():
+            cost = format_val(metrics.get("cost"), is_float=True)
+            imp = format_val(metrics.get("impressions"))
+            clk = format_val(metrics.get("clicks"))
+            btn = format_val(metrics.get("button"))
+            ctr = format_val(metrics.get("ctr"), is_percent=True)
+            cpc = format_val(metrics.get("cpc"), is_float=True)
+            cpm = format_val(metrics.get("cpm"), is_float=True)
+            view = format_val(metrics.get("view"))
+            vtr = format_val(metrics.get("vtr"), is_percent=True)
+            cpv = format_val(metrics.get("cpv"), is_float=True)
+            lines.append(f"| {item_name} | {cost} | {imp} | {clk} | {btn} | {ctr} | {cpc} | {cpm} | {view} | {vtr} | {cpv} |")
+        lines.append("")
+        
+    os.makedirs(os.path.dirname(output_md), exist_ok=True)
+    with open(output_md, 'w', encoding='utf-8') as f:
+        f.write("\n".join(lines))
+    print(f"SUCCESS: Markdown archive generated at {output_md}.")
+
+def process_csv(input_csv, output_json, output_md=None):
     campaign = {
         "campaign_name": "",
         "platform": "",
@@ -151,23 +209,28 @@ def process_csv(input_csv, output_json):
         json.dump(output_data, f, ensure_ascii=False, indent=2)
         
     print(f"SUCCESS: CSV data parsed and exported to {output_json}.")
+    
+    if output_md:
+        generate_markdown(campaign, output_md)
 
-def process_directory(input_dir, output_dir):
+def process_directory(input_dir, output_dir, archive_dir="raw/09-archive"):
     if not os.path.exists(input_dir):
         print(f"Directory {input_dir} does not exist.")
         return
         
     os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(archive_dir, exist_ok=True)
     
     csv_files_processed = 0
     for filename in os.listdir(input_dir):
         if filename.endswith(".csv"):
             input_file = os.path.join(input_dir, filename)
             output_file = os.path.join(output_dir, filename.replace('.csv', '.json'))
+            archive_file = os.path.join(archive_dir, filename.replace('.csv', '.md'))
             
             print(f"Processing {input_file}...")
             try:
-                process_csv(input_file, output_file)
+                process_csv(input_file, output_file, archive_file)
                 csv_files_processed += 1
             except Exception as e:
                 print(f"Error processing {input_file}: {e}")
@@ -181,10 +244,11 @@ if __name__ == "__main__":
         if os.path.isdir(input_path):
             process_directory(input_path, output_path)
         else:
-            process_csv(input_path, output_path)
+            # When processing a single file directly, we can deduce the archive path
+            # if we assume standard directory structure, or just pass None
+            archive_path = sys.argv[3] if len(sys.argv) > 3 else None
+            process_csv(input_path, output_path, archive_path)
     else:
-        # Default behavior: process raw/02-csv/ad_reports to raw/03-json/ad_reports
-        # Ensure we use an absolute path based on the current working directory.
         default_input = "raw/02-csv/ad_reports"
         default_output = "raw/03-json/ad_reports"
         process_directory(default_input, default_output)

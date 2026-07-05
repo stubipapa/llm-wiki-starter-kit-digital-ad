@@ -17,7 +17,7 @@ description: >
 請參閱 `.claude/skills/ingest/skill.md` 中的完整 SOP。兩者邏輯完全一致。
 
 ## 硬約束
-- `raw/` 為不可變層（Immutable），禁止修改或刪除原始檔案內容
+- `raw/` 為不可變層（Immutable），禁止修改或刪除原始檔案內容（唯一例外：廣告 CSV 成功轉譯為 09-archive 的 Markdown 報表後可安全刪除）
 - 絕對不讀取 `raw/09-archive/` 下的任何檔案，且嚴禁將 `raw/03-json/` 作為新的待處理掃描來源
 - 所有 wiki 頁面必須包含 `## 關聯連接` 區域，不能產生孤島頁面
 - 使用繁體中文編寫所有內容

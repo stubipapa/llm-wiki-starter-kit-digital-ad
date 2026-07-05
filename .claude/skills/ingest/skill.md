@@ -196,7 +196,7 @@ last_updated: YYYY-MM-DD
 
 ### 步驟 B6：自動歸檔源檔案
 當且僅當上述五個步驟皆完美完成、無任何報錯後：
-- **廣告報表**：將原始 CSV 由 `raw/02-csv/ad_reports/` 移動至 `raw/09-archive/`。JSON 中間產物保留在 `raw/03-json/ad_reports/` 不移動（作為結構化資料供後續查詢使用）。
+- **廣告報表**：Python 腳本已將資料轉換為視覺化 Markdown 報告儲存於 `raw/09-archive/`。請在確認知識庫更新完畢後，直接 **刪除** `raw/02-csv/ad_reports/` 中的原始 CSV 檔案。JSON 中間產物保留在 `raw/03-json/ad_reports/` 不移動（作為結構化資料供後續查詢使用）。
 - **一般素材**：將原檔案由 `raw/` 原目錄移動至 `raw/09-archive/`。
 
 **硬約束：絕對禁止修改、污染或刪除源檔案內部的原始文字。**
@@ -239,6 +239,6 @@ last_updated: YYYY-MM-DD
 - 所有 wiki 頁面必須包含 `## 關聯連接` 區域，不能產生孤島頁面
 - 使用繁體中文編寫所有內容
 - 實體命名使用 TitleCase，概念和來源使用 kebab-case
-- `raw/` 為不可變層（Immutable），禁止修改或刪除原始檔案內容
+- `raw/` 為不可變層（Immutable），禁止修改或刪除原始檔案內容（唯一例外：廣告 CSV 成功轉譯為 09-archive 的 Markdown 報表後可安全刪除）
 - JSON 中間產物（`raw/03-json/`）保留不歸檔，作為結構化查詢來源
 - 執行 Python 腳本時優先使用 `python3`，若不可用則退回 `python`

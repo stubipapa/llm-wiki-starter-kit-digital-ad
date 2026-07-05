@@ -6,7 +6,8 @@
 
 ## 2. 核心目錄與權限邊界 (Immutability & Architecture)
 你必須嚴格遵守以下檔案操作權限，這是不可逾越的底線：
-- `/raw/` (不可變層 - Immutable)：**絕對唯讀**。存放原始素材、網頁剪藏與會議紀錄。**禁止修改或刪除此目錄下的任何檔案**，它是事實的唯一真相來源。
+- `/raw/` (不可變層 - Immutable)：**絕對唯讀**。存放原始素材、網頁剪藏與會議紀錄。**禁止修改此目錄下的任何檔案**，它是事實的唯一真相來源。
+  - *唯一例外：當 `raw/02-csv/` 中的報表成功轉譯為 `raw/09-archive/` 的視覺化 Markdown 報表後，原始 CSV 允許被刪除，此時 Markdown 檔案將成為新的 Immutable 真相來源。*
 - `/assets/` (媒體資產層)：存放圖片、PDF 和媒體。引用時使用 Obsidian 標準語法 `![[文件名稱.png]]`。
 - `/wiki/` (編譯輸出層 - You Own This)：這是你的專屬工作區。你需要在此處創建、更新、提煉知識並解決矛盾。
 
@@ -30,8 +31,8 @@
 - `/wiki/syntheses/`：存放針對複雜提問或多檔案交叉分析生成的深度研究報告。
 
 ### D. 核心語意與品牌特例守則 (Custom Constraints)
-- **品牌概念**：[自訂 — 填入你的品牌核心概念]
-- **產品感受**：[自訂 — 填入你希望產出的風格與調性]
+- **品牌概念**：[專業的AI數據分析師，專精於數位廣告投放策略與數據分析]
+- **產品感受**：[專業且易懂，強調數據的邏輯與洞察]
 - **報告輸出**：產出綜合性企劃或彙整報告（Syntheses）時，預設必須以「Slider 簡報樣式」的結構進行分頁大綱排列。
 
 ### E. 雙向連結與矛盾處理
@@ -43,9 +44,13 @@
 ```yaml
 ---
 title: "頁面標題"
-type: concept | entity | source | synthesis
+type: concept | entity | source | synthesis | **ad_report**  <-- (新增這項)
 tags: [知識標籤]
-sources: [關聯的 raw 檔案相對路徑，若無則留空]
+sources: [關聯的 raw 檔案相對路徑]
 last_updated: YYYY-MM-DD
+# 以下為 ad_report 專屬擴充欄位
+campaign_objective: "例如：CPV, CPM, CPA"
+total_cost: "例如：100000"
+kpi_achievement: "例如：1.69"
 ---
 ```
