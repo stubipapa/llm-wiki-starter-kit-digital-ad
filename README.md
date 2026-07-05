@@ -59,6 +59,17 @@ git clone https://github.com/stubipapa/llm-wiki-starter-kit-digital-ad.git
 bash llm-wiki-starter-kit-digital-ad/scaffold.sh ~/Documents/My-Wiki-Vault
 ```
 
+### 方法二：副指以下Prompt，丟給Agent處理
+
+請依照以下步驟幫我完成安裝資料：
+1.Clone 此儲存庫到此project內：
+git clone https://github.com/stubipapa/llm-wiki-starter-kit-digital-ad.git
+2.進入該資料夾，並在終端機啟動
+cd llm-wiki-starter-kit-digital-ad
+3.呼叫安裝精靈：執行以下指令：
+/scaffold
+4.安裝完後刪除剛剛Clone的安裝資料夾(llm-wiki-starter-kit-digital-ad)
+
 ---
 
 ## 🏗️ 架構原理
